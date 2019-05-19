@@ -1,10 +1,10 @@
-version: '2'
+version: '3'
 services:
-  dev:
-    image: node:10-alpine
-    volumes:
-      - .:/usr/src/app
-    working_dir: /usr/src/app
-    command: ./node_modules/nodemon/bin/nodemon.js /usr/src/app
+  redis-server:
+    image: 'redis:latest'
     ports:
-      - 3010:3000
+      - 6379:6379
+  dev:
+    build: .
+    ports:
+      - '3000:3000'

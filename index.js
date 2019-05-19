@@ -1,14 +1,23 @@
 const app = require('express')();
-const bodyParser = require('body-parser');
+const redis = require('redis');
 
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
+const redisClient = redis.createClient({
+  host: 'redis-server',
+  port: 6379
+});
+
+redisClient.set('visit', 0);
 
 app.get('/', (req, res, next) => {
   res.json('Hello world');
 });
 
-app.post('/todo', (req, res, next) => {
-  console.log(req.body);
+app.get('/visit', async (req, res, next) => {
+  redisClient.get('visit', (err, count) => {
+    redisClient.set('visit', parseInt(count) + 1);
+    res.json(`Total visitor : ${count}`);
+  });
 });
 
 app.listen(3000, () => {
